@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Preconnect and embed the Doto font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Apply the font globally */
+        body {
+            margin: 0;
+            font-family: 'Doto', sans-serif; /* Apply Doto font from Google Fonts */
+            height: 100vh;
+            padding: 0.8cm; /* Page border padding */
+            border: 1px solid #333; /* Border around the page */
+            overflow: hidden; /* Prevent scrollbars */
+            position: relative;
+        }
+
+        /* Apply font to specific elements for testing */
+        h1, p, nav {
+            font-family: 'Doto', sans-serif;
+        }
+
+        /* Animation for fading in name and title */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+        }
+
+        .left-section {
+            flex: 0 0 250px;
+            padding: 20px;
+            color: #ffffff;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        /* Navigation (Options) Animation */
+        nav ul li a {
+            text-decoration: none;
+            color: #e0e0e0;
+            font-size: 1.1em;
+            opacity: 0;
+            transform: translateX(-20px); /* Start slightly off-screen */
+            animation: slideIn 1s forwards; /* Animate sliding in */
+        }
+
+        nav ul li a:nth-child(1) {
+            animation-delay: 0.5s;
+        }
+
+        nav ul li a:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        nav ul li a:nth-child(3) {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Adjust the position of the navigation (options) */
+        nav {
+            position: absolute;
+            top: 170%; /* Position from the top of the left section */
+            transform: translateY(-50%); /* Center the options vertically */
+            width: 100%;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Move the dot out of nav but keep it in the same position */
+        .dot-link {
+            position: absolute;
+            top: 190px; /* Adjust the top position to match the original dot's position */
+            left: 10mm; /* Same as before */
+            width: 0.5cm;
+            height: 0.5cm;
+            border-radius: 50%;
+            background-color: black; /* Initial colour of the dot */
+            cursor: pointer; /* Make it clickable */
+            animation: fadeIn 1s forwards; /* Animate sliding in */
+            transition: background-color 0.3s; /* Smooth transition for colour change */
+        }
+
+        .dot-link:hover {
+            background-color: #47ffdd; /* Colour change on hover (tomato red in this example) */
+        }
+
+        /* Cursor animation for terminal effect */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 17px;
+            background-color: #ffffffad;
+            animation: blink 1s infinite step-end;
+            margin-left: 0px;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Canvas for noise background */
+        #noiseCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Prevent interaction with the canvas */
+            z-index: -1; /* Ensure canvas is behind other elements */
+        }
+
+        /* Transparent black card styling */
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 1110px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 20px;
+            bottom: 15px;
+            right: 15px;
+            z-index: 2;
+        }
+        .card2 {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 205px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+    overflow-y: hidden; /* Hide the vertical scrollbar */
+    height: auto;
+    max-height: calc(704px - 37px);
+}
+
+
+
+        .badges-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .badge {
+            width: 100px; /* Adjust as needed */
+            height: 100px; /* Adjust as needed */
+            margin-bottom: 10px;
+            animation: scrollBadges 15s linear infinite;
+        }
+        
+        @keyframes scrollBadges {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100%); /* Moves badges up by 100% of their height */
+    }
+}
+
+        .section-title {
+            font-size: 1.2em;
+            margin-top: 20px;
+            border-bottom: 2px solid #fff;
+            padding-bottom: 5px;
+        }
+
+        .skills-list, .languages-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .skills-list li, .languages-list li {
+            margin: 5px 0;
+        }
+
+        .skills-list a {
+            color: teal; /* Sets the text colour to cyan */
+            text-decoration: none; /* Removes the underline */
+        }
+
+        .skills-list a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+    </style>
+</head>
+<body>
+    <canvas id="noiseCanvas"></canvas>
+
+    <div class="container">
+        <div class="left-section">
+            <h1 class="name fade-in">Melvin Francy</h1>
+            <p class="role fade-in">Tech Enthusiast & Developer</p>
+            <nav>
+                <ul>
+                    <li><a href="about_me.html">About Me</a></li>
+                    <li><a href="certifications.html">Certifications</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Transparent black card -->
+    <div class="card">
+        <div class="section-title">Projects<br></div>
+        <ul class="skills-list"><br>
+            <li><a href=""><strong>Artist Portfolio Website with Live show Booking</strong></a></li>
+            <li>This is a sleek platform for showcasing an artist's work and managing live event bookings. It features a portfolio gallery, an easy-to-use booking system, and embedded music player. Ideal for musicians, performers, and creatives, it helps connect with fans and organisers, making it simple to schedule gigs and display upcoming shows.</li>
+            <li><a href="https://github.com/Melvinfused/Mi_portfolio"><strong>Personal Portfolio Website</strong></a></li>
+            <li>This is basically my space on the web to show off what I’ve been working on. It’s where I put together all my projects, talk a bit about what I do, and list the skills I’ve picked up. Think of it like a digital resume but with more personality—it’s where I can let my work speak for itself. Plus, it makes it easy for anyone interested in collaborating or hiring to get in touch with me directly. It’s my own little corner of the internet.</li>
+            <li><a href="https://github.com/Melvinfused/read_aloud_weather_report_script"><strong>A script to Read Aloud Weather Report</strong></a></li> 
+            <li>My Weather and Air Quality Reader script is a Python tool that provides real-time weather, air quality, and wind updates for Kochi, India, using hardcoded location data. It fetches weather details (temperature, description, wind speed) from OpenWeatherMap and air quality info (AQI) from AQICN. The script then reads this data aloud using gTTS, and plays the audio via Pygame. After the playback, it cleans up the generated audio file.
+
+                The script can easily be automated using Windows Task Scheduler or similar task automation apps, allowing it to run at specified intervals (e.g., every morning or throughout the day) to provide regular updates without manual execution. It’s a convenient and hands-free way to stay informed while multitasking.</li>           
+        </ul>
+    </div>
+    
+
+    <!-- Make the dot a link to index.html -->
+    <a href="index.html">
+        <div class="dot-link"></div>
+    </a>
+
+        <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.js"></script>
+        <script>
+            // Set up the canvas and get context
+            const canvas = document.getElementById("noiseCanvas");
+            const ctx = canvas.getContext("2d");
+    
+            // Resize canvas to cover the full page
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+    
+            // Initialize Simplex Noise (a more efficient version of Perlin Noise)
+            const noise = new SimplexNoise();
+    
+            // Static noise variables
+            let offsetX = 0.0001;
+            let offsetY = 0.0001;
+            const scale = 0.0005; // Control the "zoom" of the noise (make it less sharp)
+    
+            // Define gradient colours (from dark cyan to white)
+            function getGradientColour(x, y, noiseValue) {
+                const normalizedValue = (noiseValue + 1) / 2; // Normalize to range 0-1
+                const positionFactor = (x / canvas.width + y / canvas.height) / 2; // Average position factor
+    
+                // Define RGB components of the colours
+                const r1 = 168, g1 = 218, b1 = 220; // Minty White (#A8DADC)
+                const r2 = 38, g2 = 79, b2 = 83;    // Dark teal (#264f53)
+                const r3 = 9, g3 = 20, b3 = 18;     // Very dark teal (#091412)
+    
+                // Apply positionFactor to darken the colours as you move to the bottom-right
+                const factor = Math.min(1, positionFactor + (normalizedValue - 0.5) * 0.5); // Mix factor
+    
+                // Interpolate between the colours with the position-based factor
+                let r, g, b;
+                if (normalizedValue < 8.5) {
+                    const t = normalizedValue * 2; // Scale to range 0 to 1
+                    r = Math.floor((1 - t) * r1 + t * r2 * factor);
+                    g = Math.floor((1 - t) * g1 + t * g2 * factor);
+                    b = Math.floor((1 - t) * b1 + t * b2 * factor);
+                } else {
+                    const t = (normalizedValue - 0.5) * 2; // Scale to range 0 to 1
+                    r = Math.floor((1 - t) * r2 * factor + t * r3);
+                    g = Math.floor((1 - t) * g2 * factor + t * g3);
+                    b = Math.floor((1 - t) * b2 * factor + t * b3);
+                }
+    
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+    
+            // Function to generate Perlin noise-based background (static, single render)
+            function generateStaticNoiseBackground() {
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const noiseValue = noise.noise2D(
+                            (x + offsetX) * scale,
+                            (y + offsetY) * scale
+                        );
+    
+                        const gradientColor = getGradientColour(x, y, noiseValue);
+    
+                        ctx.fillStyle = gradientColor;
+                        ctx.fillRect(x, y, 1, 1); // Draw a pixel
+                    }
+                }
+            }
+    
+            // Generate the static noise effect once on page load
+            generateStaticNoiseBackground();
+        </script>
+</body>
+</html>

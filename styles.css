@@ -1,0 +1,101 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Doto', Arial, sans-serif; /* Apply Doto font, with fallback */
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Theme Variables */
+:root {
+    --background-color: #f3f3f3;
+    --text-color: #000;
+    --link-color: #96fbe9ab;
+    --gradient-background: radial-gradient(circle, rgba(200,200,200,0.3), transparent);
+}
+
+body.dark-mode {
+    --background-color: #1e1e1e;
+    --text-color: #e0e0e0;
+    --link-color: #888;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    width: 80%;
+    max-width: 1200px;
+}
+
+.left-section {
+    width: 30%;
+    padding: 20px;
+}
+
+
+
+/* Typography */
+.name {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.role {
+    font-size: 1.1em;
+    color: #bdfffbc2;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+nav ul {
+    list-style: none;
+    margin-top: 20px;
+}
+
+nav ul li a {
+    display: block;
+    font-weight: bold;
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 10px 0;
+    transition: color 0.2s;
+}
+
+nav ul li a:hover {
+    color: var(--link-color);
+}
+
+.bio {
+    font-size: 1em;
+    line-height: 1.6;
+    max-width: 500px;
+    text-align: right;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.theme-toggle span {
+    font-size: 0.9em;
+    margin: 0 5px;
+}
+
+.theme-toggle input[type="checkbox"] {
+    width: 40px;
+    height: 20px;
+    cursor: pointer;
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Perlin Noise Background</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            font-family: 'Doto', sans-serif; /* Apply Doto font */
+        }
+
+        /* Full-page canvas with fluid Perlin noise effect */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Ensure the canvas stays in the background */
+        }
+
+        /* Transparent black tinted layer */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: 0; /* Layer above the canvas but below the content */
+        }
+
+        /* Container for the main content */
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            position: relative; /* Ensure content stays above the overlay */
+            z-index: 2; /* Ensure content is in front of overlay */
+        }
+
+        .left-section {
+            padding: 20px;
+            z-index: 2; /* Ensure it stays above the overlay */
+        }
+
+        h1, p {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 10px 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #A8DADC; /* Light minty color for text */
+            font-size: 1.5em;
+        }
+
+        .bio-section {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-size: 1.1em;
+            line-height: 1.4;
+            max-width: 300px;
+            z-index: 1;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 17px;
+            background-color: #ffffffad;
+            animation: blink 1s infinite step-end;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+    /*Loader Style*/
+
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .pulse-dot {
+    width: 50px;
+    height: 50px;
+    background-color: #47ffdd;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+  }
+
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="pulse-dot"></div>
+      </div>
+
+    <!-- Static noise canvas background -->
+    <canvas id="noiseCanvas"></canvas>
+
+    <!-- Transparent black tinted overlay -->
+    <div class="overlay"></div>
+
+    <!-- Main content section -->
+    <div class="container">
+        <div class="left-section">
+            <h1>Melvin Francy</h1>
+            <p>Tech Enthusiast & Developer</p>
+            <nav style="margin-top: 30px;">
+                <ul>
+                    <li><a href="about_me.html">About Me</a></li>
+                    <li><a href="certifications.html">Certifications</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.js"></script>
+    <script>
+        // Set up the canvas and get context
+        const canvas = document.getElementById("noiseCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Resize canvas to cover the full page
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Initialize Simplex Noise (a more efficient version of Perlin Noise)
+        const noise = new SimplexNoise();
+
+        // Static noise variables
+        let offsetX = 0.0001;
+        let offsetY = 0.0001;
+        const scale = 0.0005; // Control the "zoom" of the noise (make it less sharp)
+
+        // Define gradient colours (from dark cyan to white)
+        function getGradientColour(x, y, noiseValue) {
+            const normalizedValue = (noiseValue + 1) / 2; // Normalize to range 0-1
+            const positionFactor = (x / canvas.width + y / canvas.height) / 2; // Average position factor
+
+            // Define RGB components of the colours
+            const r1 = 168, g1 = 218, b1 = 220; // Minty White (#A8DADC)
+            const r2 = 38, g2 = 79, b2 = 83;    // Dark teal (#264f53)
+            const r3 = 9, g3 = 20, b3 = 18;     // Very dark teal (#091412)
+
+            // Apply positionFactor to darken the colours as you move to the bottom-right
+            const factor = Math.min(1, positionFactor + (normalizedValue - 0.5) * 0.5); // Mix factor
+
+            // Interpolate between the colours with the position-based factor
+            let r, g, b;
+            if (normalizedValue < 8.5) {
+                const t = normalizedValue * 2; // Scale to range 0 to 1
+                r = Math.floor((1 - t) * r1 + t * r2 * factor);
+                g = Math.floor((1 - t) * g1 + t * g2 * factor);
+                b = Math.floor((1 - t) * b1 + t * b2 * factor);
+            } else {
+                const t = (normalizedValue - 0.5) * 2; // Scale to range 0 to 1
+                r = Math.floor((1 - t) * r2 * factor + t * r3);
+                g = Math.floor((1 - t) * g2 * factor + t * g3);
+                b = Math.floor((1 - t) * b2 * factor + t * b3);
+            }
+
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Function to generate Perlin noise-based background
+        function generateStaticNoiseBackground() {
+            for (let y = 0; y < canvas.height; y++) {
+                for (let x = 0; x < canvas.width; x++) {
+                    const noiseValue = noise.noise2D(
+                        (x + offsetX) * scale,
+                        (y + offsetY) * scale
+                    );
+
+                    const gradientColor = getGradientColour(x, y, noiseValue);
+
+                    ctx.fillStyle = gradientColor;
+                    ctx.fillRect(x, y, 1, 1); // Draw each pixel
+                }
+            }
+        }
+
+        // Generate the static background once
+        generateStaticNoiseBackground();
+    </script>
+        <script>
+            window.onload = function() {
+              setTimeout(function() {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("content").style.display = "block";
+              }, 3000);  // Adjust the time as needed
+            };
+          </script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Preconnect and embed the Doto font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Apply the font globally */
+        body {
+            margin: 0;
+            font-family: 'Doto', sans-serif; /* Apply Doto font from Google Fonts */
+            height: 100vh;
+            padding: 0.8cm; /* Page border padding */
+            border: 1px solid #333; /* Border around the page */
+            overflow: hidden; /* Prevent scrollbars */
+            position: relative;
+        }
+
+        /* Apply font to specific elements for testing */
+        h1, p, nav {
+            font-family: 'Doto', sans-serif;
+        }
+
+        /* Animation for fading in name and title */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+        }
+
+        .left-section {
+            flex: 0 0 250px;
+            padding: 20px;
+            color: #ffffff;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        /* Navigation (Options) Animation */
+        nav ul li a {
+            text-decoration: none;
+            color: #e0e0e0;
+            font-size: 1.1em;
+            opacity: 0;
+            transform: translateX(-20px); /* Start slightly off-screen */
+            animation: slideIn 1s forwards; /* Animate sliding in */
+        }
+
+        nav ul li a:nth-child(1) {
+            animation-delay: 0.5s;
+        }
+
+        nav ul li a:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        nav ul li a:nth-child(3) {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Adjust the position of the navigation (options) */
+        nav {
+            position: absolute;
+            top: 170%; /* Position from the top of the left section */
+            transform: translateY(-50%); /* Center the options vertically */
+            width: 100%;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Move the dot out of nav but keep it in the same position */
+        .dot-link {
+            position: absolute;
+            top: 190px; /* Adjust the top position to match the original dot's position */
+            left: 10mm; /* Same as before */
+            width: 0.5cm;
+            height: 0.5cm;
+            border-radius: 50%;
+            background-color: black; /* Initial colour of the dot */
+            cursor: pointer; /* Make it clickable */
+            animation: fadeIn 1s forwards; /* Animate sliding in */
+            transition: background-color 0.3s; /* Smooth transition for colour change */
+        }
+
+        .dot-link:hover {
+            background-color: #47ffdd; /* Colour change on hover (tomato red in this example) */
+        }
+
+        /* Cursor animation for terminal effect */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 17px;
+            background-color: #ffffffad;
+            animation: blink 1s infinite step-end;
+            margin-left: 0px;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Canvas for noise background */
+        #noiseCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Prevent interaction with the canvas */
+            z-index: -1; /* Ensure canvas is behind other elements */
+        }
+
+        /* Transparent black card styling */
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 20px;
+    bottom: 15px;
+    right: 513px;
+    z-index: 2;
+        }
+        .card2 {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 470px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 2;
+        }
+
+        .card h1, .card h2, .card h3 {
+            margin: 0;
+        }
+
+        .card p {
+            margin: 10px 0;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            margin-top: 20px;
+            border-bottom: 2px solid #fff;
+            padding-bottom: 5px;
+        }
+
+        .skills-list, .languages-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .skills-list li, .languages-list li {
+            margin: 5px 0;
+        }
+/*Loader Style*/
+
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .pulse-dot {
+    width: 50px;
+    height: 50px;
+    background-color: #47ffdd;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+  }
+
+    </style>
+</head>
+<body>
+
+    <!--<div id="loader">
+        <div class="pulse-dot"></div>
+      </div>-->
+      
+    <canvas id="noiseCanvas"></canvas>
+
+    <div class="container">
+        <div class="left-section">
+            <h1 class="name fade-in">Melvin Francy</h1>
+            <p class="role fade-in">Tech Enthusiast & Developer</p>
+            <nav>
+                <ul>
+                    <li><a href="about_me.html">About Me</a></li>
+                    <li><a href="certifications.html">Certifications</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Transparent black card -->
+    <div class="card">
+        <h1>Hi,</h1>
+        <p>I am a driven final-year IMCA student, proficient in C# and Python, with a strong foundation in cloud computing, AI, and system maintenance. My academic journey has equipped me with both technical knowledge and hands-on project experience, which I am eager to apply in real-world scenarios. I am passionate about exploring emerging technologies and thrive in collaborative, innovative environments. With a commitment to continuous learning, I aim to contribute meaningfully to dynamic teams while expanding my professional skills.</p>
+
+        <div class="section-title">Education and Training</div>
+        <p><strong>Expected in July 2025</strong><br>De Paul Institute of Science And Technology, Angamaly, Kerala<br>Integrated Master of Computer Application (MCA)</p>
+        <p><strong>March 2020</strong><br>Technical Higher Secondary School, Aluva, Kerala<br>Plus 2</p>
+        <p><strong>July 2017</strong><br>St. Mary's High School, Aluva, Kerala<br>SSLC</p>
+
+    </div>
+    <div class="card2">
+        <div class="section-title">Languages</div>
+        <ul class="languages-list">
+            <li><strong>Malayalam</strong> - Native</li>
+            <li><strong>English</strong> - Professional</li>
+            <li><strong>Hindi</strong> - Intermediate</li>
+        </ul>
+
+        <div class="section-title">Skills</div>
+        <ul class="skills-list">
+            <li><strong>Problem-Solving</strong></li>
+            <li><strong>Adaptability</strong></li>
+
+        </ul>
+    </div>
+
+    <!-- Make the dot a link to index.html -->
+    <a href="index.html" class="dot-link"></a>
+
+    <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.js"></script>
+    <script>
+        // Set up the canvas and get context
+        const canvas = document.getElementById("noiseCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Resize canvas to cover the full page
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Initialize Simplex Noise (a more efficient version of Perlin Noise)
+        const noise = new SimplexNoise();
+
+        // Static noise variables
+        let offsetX = 0.0001;
+        let offsetY = 0.0001;
+        const scale = 0.0005; // Control the "zoom" of the noise (make it less sharp)
+
+        // Define gradient colours (from dark cyan to white)
+        function getGradientColour(x, y, noiseValue) {
+            const normalizedValue = (noiseValue + 1) / 2; // Normalize to range 0-1
+            const positionFactor = (x / canvas.width + y / canvas.height) / 2; // Average position factor
+
+            // Define RGB components of the colours
+            const r1 = 168, g1 = 218, b1 = 220; // Minty White (#A8DADC)
+            const r2 = 38, g2 = 79, b2 = 83;    // Dark teal (#264f53)
+            const r3 = 9, g3 = 20, b3 = 18;     // Very dark teal (#091412)
+
+            // Apply positionFactor to darken the colours as you move to the bottom-right
+            const factor = Math.min(1, positionFactor + (normalizedValue - 0.5) * 0.5); // Mix factor
+
+            // Interpolate between the colours with the position-based factor
+            let r, g, b;
+            if (normalizedValue < 8.5) {
+                const t = normalizedValue * 2; // Scale to range 0 to 1
+                r = Math.floor((1 - t) * r1 + t * r2 * factor);
+                g = Math.floor((1 - t) * g1 + t * g2 * factor);
+                b = Math.floor((1 - t) * b1 + t * b2 * factor);
+            } else {
+                const t = (normalizedValue - 0.5) * 2; // Scale to range 0 to 1
+                r = Math.floor((1 - t) * r2 * factor + t * r3);
+                g = Math.floor((1 - t) * g2 * factor + t * g3);
+                b = Math.floor((1 - t) * b2 * factor + t * b3);
+            }
+
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Function to generate Perlin noise-based background (static, single render)
+        function generateStaticNoiseBackground() {
+            for (let y = 0; y < canvas.height; y++) {
+                for (let x = 0; x < canvas.width; x++) {
+                    const noiseValue = noise.noise2D(
+                        (x + offsetX) * scale,
+                        (y + offsetY) * scale
+                    );
+
+                    const gradientColor = getGradientColour(x, y, noiseValue);
+
+                    ctx.fillStyle = gradientColor;
+                    ctx.fillRect(x, y, 1, 1); // Draw a pixel
+                }
+            }
+        }
+
+        // Generate the static noise effect once on page load
+        generateStaticNoiseBackground();
+    </script>
+    <!--Loader Script--> 
+
+</body>
+</html>
