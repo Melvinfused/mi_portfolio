@@ -1,6 +1,6 @@
 # Mi Portfolio
 
-This is a simple, multipage portfolio website showcasing my work and skills.
+This is a simple, multipage portfolio website showcasing me.
 
 ## Pages
 - **Home**: Welcome page.
